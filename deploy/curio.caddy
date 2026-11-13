@@ -1,4 +1,7 @@
-curio.futile.studio {
-	encode zstd gzip
-	reverse_proxy 127.0.0.1:4431
+http://curio.futile.studio {
+	import common
+	# Table display and phones share one socket; buffered, a sealed-bid reveal reaches screens at different times.
+	reverse_proxy 127.0.0.1:4431 {
+		flush_interval -1
+	}
 }

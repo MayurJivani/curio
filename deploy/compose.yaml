@@ -1,12 +1,21 @@
+# Coolify on Jinx (FRC/DEPLOY.md). Host network: the app listens on 4431 behind Caddy.
 services:
   curio:
     image: ghcr.io/mayurjivani/curio:latest
     pull_policy: always
+    network_mode: host
     restart: unless-stopped
+    user: "1000:1000"
+    command: ["node_modules/.bin/tsx", "server/index.ts"]
     environment:
+      NODE_ENV: "production"
       PORT: "4431"
-      DATA_DIR: /data
-    ports:
-      - "127.0.0.1:4431:4431"
+      DATA_DIR: "/data"
     volumes:
-      - /srv/curio:/data
+      - /var/lib/private/curio:/data
+    mem_limit: 256m
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
