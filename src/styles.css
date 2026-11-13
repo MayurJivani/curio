@@ -1,0 +1,99 @@
+@import 'tailwindcss';
+@import '@fontsource/libre-caslon-display/400.css';
+@import '@fontsource/libre-caslon-text/400.css';
+@import '@fontsource/libre-caslon-text/400-italic.css';
+@import '@fontsource/libre-caslon-text/700.css';
+@import '@fontsource-variable/schibsted-grotesk/index.css';
+@import '@fontsource-variable/spline-sans-mono/index.css';
+
+/* Curio tokens. Documented in DESIGN.md. */
+@theme {
+  --color-ivory: #f3eee3;
+  --color-gallery: #faf7f0;
+  --color-paper: #e8e1d2;
+  --color-stone: #cfc6b4;
+  --color-dust: #8f8676;
+  --color-charcoal: #3a362f;
+  --color-ink: #16140f;
+  --color-vermilion: #d63a1c;
+  --color-vermilion-deep: #a92a12;
+  --color-cobalt: #1f45b0;
+  --color-mustard: #d39b17;
+  --color-forest: #2c5a3c;
+  --color-plum: #5d3a62;
+
+  --font-display: 'Libre Caslon Display', 'Libre Caslon Text', Georgia, serif;
+  --font-serif: 'Libre Caslon Text', Georgia, serif;
+  --font-sans: 'Schibsted Grotesk Variable', system-ui, sans-serif;
+  --font-mono: 'Spline Sans Mono Variable', ui-monospace, monospace;
+
+  --shadow-hang: 0 1px 1px rgb(22 20 15 / 0.08), 0 8px 18px -6px rgb(22 20 15 / 0.28), 0 22px 40px -18px rgb(22 20 15 / 0.35);
+  --shadow-lift: 0 2px 2px rgb(22 20 15 / 0.08), 0 18px 34px -10px rgb(22 20 15 / 0.4);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root {
+  color-scheme: light;
+  background: var(--color-ivory);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-feature-settings: 'ss01';
+  -webkit-font-smoothing: antialiased;
+  accent-color: var(--color-vermilion);
+  caret-color: var(--color-vermilion);
+}
+body {
+  margin: 0;
+  min-height: 100dvh;
+  /* paper grain: fine fractal noise, multiplied into the ivory */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .09 0 0 0 0 .08 0 0 0 0 .06 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+::selection { background: var(--color-vermilion); color: var(--color-gallery); }
+:focus-visible { outline: 2px solid var(--color-cobalt); outline-offset: 3px; border-radius: 2px; }
+* { scrollbar-width: thin; scrollbar-color: var(--color-stone) transparent; }
+a { text-underline-offset: 0.18em; text-decoration-thickness: 1px; }
+
+/* Layered so Tailwind utilities (hidden, min-h-*, px-*) can still override these. */
+@layer components {
+.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.display { font-family: var(--font-display); font-weight: 400; letter-spacing: -0.015em; line-height: 0.95; }
+.serif { font-family: var(--font-serif); }
+.rule { border-color: var(--color-ink); }
+.hair { border-color: rgb(22 20 15 / 0.16); }
+.smallcaps { font-variant-caps: all-small-caps; letter-spacing: 0.06em; }
+
+/* Buttons: a printed ticket, not a pill. */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  min-height: 2.75rem; padding: 0 1.15rem; border: 1px solid var(--color-ink);
+  background: var(--color-gallery); font-weight: 600; font-size: 0.95rem; cursor: pointer;
+  transition: background-color 160ms var(--ease-out-expo), color 160ms, transform 120ms, box-shadow 160ms;
+  user-select: none; touch-action: manipulation;
+}
+.btn:hover { background: var(--color-paper); }
+.btn:active { transform: translateY(1px) scale(0.985); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.btn-ink { background: var(--color-ink); color: var(--color-gallery); }
+.btn-ink:hover { background: var(--color-charcoal); }
+.btn-red { background: var(--color-vermilion); border-color: var(--color-vermilion-deep); color: var(--color-gallery); }
+.btn-red:hover { background: var(--color-vermilion-deep); }
+.btn-ghost { border-color: transparent; background: transparent; }
+.btn-ghost:hover { background: rgb(22 20 15 / 0.06); }
+
+.field {
+  width: 100%; min-height: 3rem; padding: 0 0.9rem; border: 1px solid var(--color-ink);
+  background: var(--color-gallery); outline: none; font-size: 1rem;
+}
+.field:focus { box-shadow: 0 0 0 3px rgb(31 69 176 / 0.25); }
+.field::placeholder { color: var(--color-dust); }
+
+/* A painting hung on the wall: thin dark frame, cream mat, soft hang shadow. */
+.hung { background: var(--color-gallery); padding: 6%; box-shadow: var(--shadow-hang); outline: 1px solid rgb(22 20 15 / 0.75); outline-offset: -1px; }
+.hung-tight { padding: 4px; }
+
+.timer-bar { transform-origin: left; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}

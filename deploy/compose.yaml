@@ -1,0 +1,12 @@
+services:
+  curio:
+    image: ghcr.io/mayurjivani/curio:latest
+    pull_policy: always
+    restart: unless-stopped
+    environment:
+      PORT: "4431"
+      DATA_DIR: /data
+    ports:
+      - "127.0.0.1:4431:4431"
+    volumes:
+      - /srv/curio:/data
