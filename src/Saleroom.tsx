@@ -321,6 +321,10 @@ function Actions({ ctx }: { ctx: Ctx }) {
   const ph = g.phase;
   const [error, setError] = useState('');
   useEffect(() => setError(''), [g.v]);
+  // the bid controls sit below the painting on phones and short laptop screens
+  const ref = useRef<HTMLDivElement>(null);
+  const mine = seat !== null && ctx.s.waiting.includes(seat);
+  useEffect(() => { if (mine) ref.current?.scrollIntoView({ block: 'nearest' }); }, [mine, lotNumber(g), ph.kind]);
   if (seat === null) return null;
   const cash = g.players[seat].cash;
   const go = async (a: Parameters<typeof act>[0]) => { const r = await act(a); if (!r.ok) setError(r.error); };
@@ -361,7 +365,7 @@ function Actions({ ctx }: { ctx: Ctx }) {
     }
   }
   return (
-    <div className="flex flex-col gap-2 border-t hair pt-4">
+    <div ref={ref} className="flex scroll-mb-20 flex-col gap-2 border-t hair pt-4 lg:scroll-mb-4">
       {body}
       {error && <p role="alert" className="text-sm text-vermilion-deep">{error}</p>}
     </div>

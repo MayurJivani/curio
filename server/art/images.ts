@@ -24,7 +24,14 @@ export async function cachedImage(url: string, cacheDir: string): Promise<{ file
   let p = inflight.get(key);
   if (!p) {
     p = (async () => {
-      const res = await fetch(u, { headers: HEADERS, redirect: 'error' });
+      let res = await fetch(u, { headers: HEADERS, redirect: 'manual' });
+      // AIC answers 307 to a smaller IIIF size for small originals; follow one hop, allowlisted.
+      const loc = res.status >= 300 && res.status < 400 ? res.headers.get('location') : null;
+      if (loc) {
+        const next = new URL(loc, u);
+        if (next.protocol !== 'https:' || !ALLOWED_HOSTS.has(next.hostname)) throw new Error(`redirect not allowed: ${next.hostname}`);
+        res = await fetch(next, { headers: HEADERS, redirect: 'error' });
+      }
       const type = (res.headers.get('content-type') ?? '').split(';')[0].trim().toLowerCase();
       if (!res.ok || !EXT[type]) {
         await res.body?.cancel();
